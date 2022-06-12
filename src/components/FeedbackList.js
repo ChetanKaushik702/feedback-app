@@ -1,14 +1,19 @@
 import PropTypes from "prop-types";
 import FeedbackItem from "./FeedbackItem";
 
-const FeedbackList = ({ feedbacks }) => {
+const FeedbackList = ({ feedbacks, deleteFeedbackById }) => {
   if (!feedbacks || feedbacks.length === 0) {
     return <p>No Feedbacks Yet!</p>;
   }
+
   return (
     <div className="feedback-list">
       {feedbacks.map((item) => (
-        <FeedbackItem key={item.id} feedback={item} />
+        <FeedbackItem
+          key={item.id}
+          feedback={item}
+          deleteFeedbackById={deleteFeedbackById}
+        />
       ))}
     </div>
   );

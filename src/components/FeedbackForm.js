@@ -1,9 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Button from "./Button";
 import Card from "./Card";
 import Rating from "./Rating";
-const FeedbackForm = ({ addFeedback }) => {
+import FeedbackContext from "./FeedbackContext";
+const FeedbackForm = () => {
+  const { addFeedback } = useContext(FeedbackContext);
+
   const [text, setText] = useState("");
   const [rating, setRating] = useState(10);
   const [message, setMessage] = useState("");

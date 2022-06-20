@@ -1,16 +1,27 @@
 import { v4 as uuidv4 } from "uuid";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "./Button";
 import Card from "./Card";
 import Rating from "./Rating";
 import FeedbackContext from "./FeedbackContext";
 const FeedbackForm = () => {
-  const { addFeedback } = useContext(FeedbackContext);
+  const { addFeedback, feedbackEdit, updateFeedbackById } =
+    useContext(FeedbackContext);
 
   const [text, setText] = useState("");
   const [rating, setRating] = useState(10);
   const [message, setMessage] = useState("");
   const [btnDisabled, setBtnDisabled] = useState(true);
+
+  useEffect(() => {
+    if (feedbackEdit.edit) {
+      const { item: feedback } = feedbackEdit;
+      setText(feedback.text);
+      setRating(feedback.rating);
+      setMessage(null);
+      setBtnDisabled(false);
+    }
+  }, [feedbackEdit]);
 
   const handleTextChange = (e) => {
     if (text === "") {
@@ -32,18 +43,22 @@ const FeedbackForm = () => {
     if (text.trim().length >= 10) {
       const feedback = {
         text,
-        id: uuidv4(),
+        id: feedbackEdit.edit ? feedbackEdit.item.id : uuidv4(),
         rating,
       };
-      addFeedback(feedback);
+      if (feedbackEdit.edit) {
+        updateFeedbackById(feedback);
+      } else {
+        addFeedback(feedback);
+      }
       setText("");
+      setBtnDisabled(true);
     }
   };
   return (
     <Card>
       <form onSubmit={handleSubmit}>
         <h2>How would you rate your service with us?</h2>
-        {/* @todo - rating select component */}
         <Rating select={setRating} />
         <div className="input-group">
           <input
